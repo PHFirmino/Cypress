@@ -52,6 +52,14 @@ Cypress.Commands.add('getIframeBody', (iframeSelector) => {
       .then(cy.wrap);
   });
 
+  Cypress.Commands.add('getIframeBodyExitBody', (iframeSelector) => {
+    return cy
+      .get(iframeSelector)
+      .its('0.contentDocument')
+      .should('not.be.empty')
+      .then(cy.wrap);
+  });
+
 Cypress.Commands.add('selectItem', (item)=> {
     cy.get('.menu-list > .btn')
     .eq(item)
