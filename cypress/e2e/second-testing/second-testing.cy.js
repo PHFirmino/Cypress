@@ -58,16 +58,16 @@ describe('Aprendizagem', ()=>{
         .should('have.attr', 'data-tippy-content', 'Não foi possível gerar o certificado')
     });
 })
-describe.only('Trilha', ()=>{
+describe('Trilha', ()=>{
     beforeEach(() => {
         cy.viewport(1060, 641);
         cy.visit('https://prd.evolke.com.br/admin/auth/index.php');
     });
-    it.only('Aprendizagem iframe', () => {
+    it('Aprendizagem iframe', () => {
         cy.ignoreError('uncaught:exception');
 
-        cy.get('#ds_login').type('auto');
-        cy.get('#ds_senha').type('123');
+        cy.get('#ds_login').type('');
+        cy.get('#ds_senha').type('');
         cy.clickEnter('.button-ndt');
 
         cy.clickWait(2000);
@@ -190,3 +190,59 @@ describe('Recuperar senha', ()=> {
         cy.get('.text-paragraph-2').should('have.text', 'Insira seu login para recuperar o acesso à sua conta através do seu e-mail.');
     })
 })
+
+describe.only('Cadastro de Usuário', () => {
+    beforeEach(() => {
+        cy.visit('https://prd.evolke.com.br/admin/auth/index.php');
+    });
+	it.only('Cadastro de Usuário', () => {		
+
+        //Ignorar erros do console
+        cy.ignoreError('uncaught:exception');
+
+		//Realizando Login
+		cy.get('input[name="ds_login"]').should('exist').and('be.visible').type('');
+		cy.get('input[name="senha"]').should('exist').and('be.visible').type('');
+        cy.get('.button-ndt').should('exist').and('be.visible').click();
+
+        //Espera o looping do login
+        cy.clickWait(5000);
+
+        //Visitando a página, sem ser pelo menu
+        cy.visit('https://prd.evolke.com.br/admin/pessoas/pessoas_v2.php')
+
+        // cy.get('#menu-dropdown-ndt > ul > li').first().should('exist').and('be.visible').within(() => {
+        //     cy.get('a').should('exist').and('be.visible').first().realHover();
+
+        //     cy.get('div').first().should('exist').and('be.visible').within(() => {
+        //         cy.get('div').eq(2).should('exist').and('be.visible').click();
+        //     });
+        // });	
+
+        // //Espera o looping da transicao de tela
+        // cy.clickWait(5000);
+        
+        // cy.get('#iframe_conteudo').should('exist').and('be.visible').then(element => {
+        //     cy.getIframeBody(element).within(() => {
+                cy.get('#content-page > div').eq(4).should('exist').and('be.visible').within(() => {
+                    cy.get('.menu-acoes').should('exist').and('be.visible').within(() => {
+                        cy.get('li[data-tooltip="Nova pessoa"]').should('exist').and('be.visible').click();
+                    });
+                });
+
+                //Inserindo valores nos campos
+                cy.get('#ds_login').should('exist').and('be.visible').type('Auto7777');
+                cy.get('#nome').should('exist').and('be.visible').type('Auto7777');
+                cy.get('#senha').should('exist').and('be.visible').type('Auto7777');
+                cy.get('#confirmasenha').should('exist').and('be.visible').type('Auto7777');
+
+                cy.get('#grupos-escolha > .select2 > .selection > .select2-selection > .select2-selection__rendered > .select2-search').should('exist').and('be.visible').trigger('click');
+                cy.get('#select2-id_grupos-results > li').contains('Alunos (padrão)').click({force: true});
+
+
+                cy.get('input[name="gravar"]').should('exist').and('be.visible').click();
+                
+        //     });
+        // });
+	});
+});
